@@ -1,0 +1,30 @@
+name: XLang
+author: olijeffers0n
+main: com.oli.xlang.XLang
+api-version: 1.16
+version: 1.0
+libraries:
+  - com.github.pemistahl:lingua:1.1.0
+commands:
+  xlang:
+    description: Main command for XLang
+    usage: /<command><args>
+    aliases:
+      - xl
+permissions:
+  XLang.*:
+    description: Gives access to all XLang Commands
+    children:
+      XLang.setlanguage : true
+      XLang.setmode : true
+      XLang.reload: true
+    default: op
+  XLang.setlanguage:
+    description: Allows you to set the language of the server
+    default: op
+  Xlang.setmode:
+    description: Allows you to set the translation mode
+    default: op
+  XLang.reload:
+    description: Allows you to reload the plugin config
+    default: op
