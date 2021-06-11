@@ -28,6 +28,11 @@ public class Chat implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        
+        if (this.plugin.getConfig().getString("apiKey").equalsIgnoreCase("xxx")) {
+            this.plugin.getLogger().warning("Deepl API key not set - not attempting to translate");
+            return;
+        }
 
         Player sender = event.getPlayer();
         String message = event.getMessage();
