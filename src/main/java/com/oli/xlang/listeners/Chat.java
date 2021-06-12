@@ -25,11 +25,10 @@ public class Chat implements Listener {
         this.plugin = plugin;
     }
 
-
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        
-        if (this.plugin.getConfig().getString("apiKey").equalsIgnoreCase("xxx")) {
+
+        if (this.plugin.getConfig().getString("deepl.apiKey").equalsIgnoreCase("xxx")) {
             this.plugin.getLogger().warning("Deepl API key not set - not attempting to translate");
             return;
         }
@@ -37,9 +36,9 @@ public class Chat implements Listener {
         Player sender = event.getPlayer();
         String message = event.getMessage();
 
-        String targetColour = this.plugin.getConfig().getString("messageTranslatedColour");
-        String sourceColour = this.plugin.getConfig().getString("ownMessageTranslatedColour");
-
+        String targetColour = this.plugin.getConfig().getString("colour.messageTranslatedColour");
+        String sourceColour = this.plugin.getConfig().getString("colour.ownMessageTranslatedColour");
+        String extra = "";
 
         if (this.plugin.getConfig().getBoolean("perPlayerLanguage")) {
             Set<Player> recipients = event.getRecipients();
@@ -65,15 +64,17 @@ public class Chat implements Listener {
             });
             Bukkit.getScheduler().runTask(this.plugin, () -> Bukkit.getPluginManager().callEvent(new ChatTranslateEvent(message, messagesPerLocale)));
 
+            extra = " || Translated to " + playerLocales.size() + " locale/s";
+
         }else {
             Language language = this.plugin.detector.detectLanguageOf(message);
             String sourceLanguage = this.plugin.languageCodes.get(language.name().toLowerCase());
             if (sourceLanguage != null)
-                if (sourceLanguage.equalsIgnoreCase(this.plugin.getConfig().getString("targetLanguageCode"))) return;
+                if (sourceLanguage.equalsIgnoreCase(this.plugin.getConfig().getString("language.targetLanguageCode"))) return;
 
             event.setCancelled(true);
 
-            String translation = this.getTranslationForText(message, this.plugin.getConfig().getString("targetLanguageCode"));
+            String translation = this.getTranslationForText(message, this.plugin.getConfig().getString("language.targetLanguageCode"));
 
             if (message.equalsIgnoreCase(translation)) {
                 event.setCancelled(false);
@@ -81,6 +82,7 @@ public class Chat implements Listener {
             }
 
             event.getRecipients().forEach(player -> {
+
                 TextComponent textComponent;
                 if (player.getUniqueId().equals(sender.getUniqueId()))
                     textComponent = this.textComponentBuilder(message, translation, sender.getDisplayName(), sourceColour, true);
@@ -90,8 +92,10 @@ public class Chat implements Listener {
             });
 
             Bukkit.getScheduler().runTask(this.plugin, () -> Bukkit.getPluginManager().callEvent(new ChatTranslateEvent(message, Collections.singletonMap(language.name(), translation))));
+            extra = " || Translated to: " + translation;
         }
-        this.plugin.getLogger().info("<" + event.getPlayer().getDisplayName() + "> " + message);
+        if (!this.plugin.getConfig().getBoolean("chat.addXLangTranslationComment")) extra = "";
+        this.plugin.getLogger().info("<" + event.getPlayer().getDisplayName() + "> " + message + extra);
     }
 
     private TextComponent textComponentBuilder(String original, String translated, String playerName, String colour, Boolean hasBeenTranslated) {
@@ -120,14 +124,14 @@ public class Chat implements Listener {
     }
 
     private String getTranslationForText(String input, String language) {
-        return StringUtils.capitalize(this.plugin.translator.getTranslation(input, language));
+        return StringUtils.capitalize(this.plugin.translator.getTranslation(input.toLowerCase(), language));
     }
 
     private String getDeeplCode(String locale) {
         String countryCode = locale.split("_")[0];
 
         if (countryCode.equalsIgnoreCase("en")) return "EN-GB";
-        else if (countryCode.equalsIgnoreCase("bg")) return "GB";
+        else if (countryCode.equalsIgnoreCase("bg")) return "BG";
         else if (countryCode.equalsIgnoreCase("pt")) return "PT-PT";
         else if (this.validLocales.contains(countryCode)) return countryCode.toUpperCase();
         else return "";
