@@ -13,7 +13,7 @@ import java.util.Set;
 public class XLangCommand implements CommandExecutor {
 
     private final XLang plugin;
-    private final Set<String> validLanguages = new HashSet<>(Arrays.asList("EL","SV","DE","ES","DA","RU","SK","IT","LT","HU","NL","FI","ZH","JA","ET","SL","EN-GB","PT-PT","GB","PL","RO","FR","CS","LV"));
+    private final Set<String> validLanguages = new HashSet<>(Arrays.asList("EL","SV","DE","ES","DA","RU","SK","IT","LT","HU","NL","FI","ZH","JA","ET","SL","EN-GB","PT-PT","BG","PL","RO","FR","CS","LV"));
 
     public XLangCommand(XLang plugin) {
         this.plugin = plugin;
@@ -24,8 +24,10 @@ public class XLangCommand implements CommandExecutor {
 
         if (!command.getName().equalsIgnoreCase("xlang")) return false;
 
-        if(args.length == 0) return true;
-        // Send the help message
+        if(args.length == 0) {
+            sendHelpMessage(sender);
+            return true;
+        }
 
         if (args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("XLang.reload")) {
@@ -41,9 +43,9 @@ public class XLangCommand implements CommandExecutor {
             if (sender.hasPermission("Xlang.setmode")) {
                 if (args.length == 2) {
                     if (args[1].equalsIgnoreCase("serverWide")) {
-                        this.plugin.getConfig().set("perPlayerLanguage", false);
+                        this.plugin.getConfig().set("language.perPlayerLanguage", false);
                     } else if (args[1].equalsIgnoreCase("perPlayerLocale")) {
-                        this.plugin.getConfig().set("perPlayerLanguage", true);
+                        this.plugin.getConfig().set("language.perPlayerLanguage", true);
                     } else {
                         sender.sendMessage(ChatColor.RED + "A Translation mode argument is required");
                         return true;
@@ -64,7 +66,7 @@ public class XLangCommand implements CommandExecutor {
             if (sender.hasPermission("Xlang.setlanguage")) {
                 if (args.length == 2) {
                     if (this.validLanguages.contains(args[1])) {
-                        this.plugin.getConfig().set("targetLanguageCode", args[1]);
+                        this.plugin.getConfig().set("language.targetLanguageCode", args[1]);
                         this.plugin.saveConfig();
                         this.plugin.reloadConfig();
                         sender.sendMessage(ChatColor.GREEN + "The Language has been set!");
@@ -82,14 +84,16 @@ public class XLangCommand implements CommandExecutor {
                 return true;
             }
         }
+        sendHelpMessage(sender);
 
         return true;
     }
 
 
-
-
     private void sendHelpMessage(CommandSender sender) {
-
+        sender.sendMessage(ChatColor.GOLD + "XLang Help: \n " +
+                ChatColor.GREEN + "/xlang setTargetLanguage -- Sets the target language \n" +
+                "/xlang setTranslationMode -- Sets the translation mode \n" +
+                "/xlang reload -- Reloads the config");
     }
 }
