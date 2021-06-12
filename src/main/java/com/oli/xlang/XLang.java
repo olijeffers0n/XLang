@@ -47,8 +47,9 @@ public class XLang extends JavaPlugin implements Listener {
         loadConfig();
 
         try {
-            this.url = new URL("https://api-free.deepl.com/v2/translate");
-        } catch (MalformedURLException e) {
+            if (getConfig().getBoolean("deepl.premiumDeepl")) this.url = new URL("https://api.deepl.com/v2/translate");
+            else this.url = new URL("https://api-free.deepl.com/v2/translate");
+        }catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
@@ -58,8 +59,6 @@ public class XLang extends JavaPlugin implements Listener {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-
-
 
         try {
             this.initLangDetector.join();
@@ -75,11 +74,14 @@ public class XLang extends JavaPlugin implements Listener {
 
     private void loadConfig() {
         getConfig().options().header("Change the config settings below");
-        getConfig().addDefault("apiKey", "XXX");
-        getConfig().addDefault("targetLanguageCode", "EN-GB");
-        getConfig().addDefault("perPlayerLanguage", false);
-        getConfig().addDefault("ownMessageTranslatedColour", "#63d3ff");
-        getConfig().addDefault("messageTranslatedColour", "#a1ffb0");
+        getConfig().addDefault("deepl.apiKey", "XXX");
+        getConfig().addDefault("deepl.premiumDeepl", false);
+        getConfig().addDefault("language.targetLanguageCode", "EN-GB");
+        getConfig().addDefault("language.perPlayerLanguage", false);
+        getConfig().addDefault("colour.ownMessageTranslatedColour", "#63d3ff");
+        getConfig().addDefault("colour.messageTranslatedColour", "#a1ffb0");
+        getConfig().addDefault("chat.addXLangTranslationComment", true);
+
         getConfig().options().copyDefaults(true);
 
         saveConfig();
