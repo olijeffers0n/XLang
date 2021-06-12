@@ -33,9 +33,8 @@ public class Translator {
             out.writeBytes(this.plugin.parameterStringBuilder.getParamsString(parameters));
             out.flush();
             out.close();
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
 
             String content = in.readLine();
             in.close();
