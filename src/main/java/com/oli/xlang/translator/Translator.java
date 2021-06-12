@@ -3,10 +3,9 @@ package com.oli.xlang.translator;
 import com.google.gson.Gson;
 import com.oli.xlang.XLang;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +19,12 @@ public class Translator {
     }
 
     public String getTranslation(String input, String language) {
+
         try {
             HttpURLConnection con = (HttpURLConnection) this.plugin.url.openConnection();
             con.setRequestMethod("POST");
             Map<String, String> parameters = new HashMap<>();
-            parameters.put("auth_key", this.plugin.getConfig().getString("apiKey"));
+            parameters.put("auth_key", this.plugin.getConfig().getString("deepl.apiKey"));
             parameters.put("text", input);
             parameters.put("target_lang", language);
 
@@ -33,7 +33,7 @@ public class Translator {
             out.writeBytes(this.plugin.parameterStringBuilder.getParamsString(parameters));
             out.flush();
             out.close();
-            
+
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
 
             String content = in.readLine();
