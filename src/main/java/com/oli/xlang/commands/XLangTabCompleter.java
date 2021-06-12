@@ -40,7 +40,7 @@ public class XLangTabCompleter implements TabCompleter {
                     }else return new ArrayList<>();
                 }else if (args[0].equalsIgnoreCase("setTargetLanguage")) {
                     if (sender.hasPermission("XLang.setlanguage")) {
-                        List<String> argStrings = Arrays.asList("EL", "SV", "DE", "ES", "DA", "RU", "SK", "IT", "LT", "HU", "NL", "FI", "ZH", "JA", "ET", "SL", "EN-GB", "PT-PT", "GB", "PL", "RO", "FR", "CS", "LV");
+                        List<String> argStrings = Arrays.asList("EL", "SV", "DE", "ES", "DA", "RU", "SK", "IT", "LT", "HU", "NL", "FI", "ZH", "JA", "ET", "SL", "EN-GB", "PT-PT", "BG", "PL", "RO", "FR", "CS", "LV");
                         return argStrings;
                     }else return new ArrayList<>();
                 }
