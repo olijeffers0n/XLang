@@ -117,12 +117,6 @@ public class Chat implements Listener {
         locales.forEach( locale -> {
             String isoKey = getDeeplCode(locale);
             if (!isoKey.equals("")) translations.put(locale, this.getTranslationForText(message, isoKey));
-            
-            // Add the total number of used characters *for each* translated locale, since they are each one API call.
-            
-        	int usedCharacters = this.plugin.getConfig().getInt("deepl.totalUsedCharacters");
-        	this.plugin.getConfig().set("deepl.totalUsedCharacters", usedCharacters + message.length());
-        	this.plugin.saveConfig();
         });
 
         return translations;
