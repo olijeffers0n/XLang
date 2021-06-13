@@ -27,6 +27,7 @@ public class XLangTabCompleter implements TabCompleter {
                 argStrings.add("reload");
                 argStrings.add("setTranslationMode");
                 argStrings.add("setTargetLanguage");
+                argStrings.add("getUsedCharacters");
                 return argStrings;
             }
 
