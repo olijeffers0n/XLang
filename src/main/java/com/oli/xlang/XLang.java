@@ -78,9 +78,6 @@ public class XLang extends JavaPlugin implements Listener {
         getConfig().addDefault("deepl.apiKey", "XXX");
         // Whether or not the user is using Premium API Access
         getConfig().addDefault("deepl.premiumDeepl", false);
-        // Total used character amount (Out of 500,000 max on free API),
-        // accessible via config or command
-        getConfig().addDefault("deepl.totalUsedCharacters", 0);
         // Target language for translation service
         getConfig().addDefault("language.targetLanguageCode", "EN-GB");
         // Whether or not the translator should target player locale.
@@ -107,6 +104,4 @@ public class XLang extends JavaPlugin implements Listener {
             this.languageCodes.put(key, configuration.getString("Map."+key));
         }
     }
-
-    //fae7b9b3-b700-7955-4597-5c5b2eeb1517:fx
 }
