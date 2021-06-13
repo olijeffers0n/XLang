@@ -38,8 +38,7 @@ public class XLangCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You do not have permission");
                 return true;
             }
-        }
-        else if (args[0].equalsIgnoreCase("setTranslationMode")) {
+        } else if (args[0].equalsIgnoreCase("setTranslationMode")) {
             if (sender.hasPermission("Xlang.setmode")) {
                 if (args.length == 2) {
                     if (args[1].equalsIgnoreCase("serverWide")) {
@@ -58,11 +57,11 @@ public class XLangCommand implements CommandExecutor {
                 }
                 return true;
 
-            }else {
+            } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission");
                 return true;
             }
-        }else if (args[0].equalsIgnoreCase("setTargetLanguage")) {
+        } else if (args[0].equalsIgnoreCase("setTargetLanguage")) {
             if (sender.hasPermission("Xlang.setlanguage")) {
                 if (args.length == 2) {
                     if (this.validLanguages.contains(args[1])) {
@@ -79,13 +78,20 @@ public class XLangCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "A Language argument is required");
                     return true;
                 }
-            }else {
+            }
+        } else if (args[0].equalsIgnoreCase("getUsedCharacters")) {
+            if (sender.hasPermission("Xlang.getUsedCharacters")) {
+            	
+                int usedCharacters = this.plugin.getConfig().getInt("deepl.totalUsedCharacters");
+                sender.sendMessage(ChatColor.GREEN + "Total Translated Characters: " + usedCharacters);
+                
+                return true;
+            } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission");
                 return true;
             }
         }
         sendHelpMessage(sender);
-
         return true;
     }
 
@@ -94,6 +100,7 @@ public class XLangCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.GOLD + "XLang Help: \n " +
                 ChatColor.GREEN + "/xlang setTargetLanguage -- Sets the target language \n" +
                 "/xlang setTranslationMode -- Sets the translation mode \n" +
+                "/xlang getUsedCharacters -- Gets the # of total translated characters \n" +
                 "/xlang reload -- Reloads the config");
     }
 }
