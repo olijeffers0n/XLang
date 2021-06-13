@@ -68,18 +68,29 @@ public class XLang extends JavaPlugin implements Listener {
         }
 
         getCommand("xlang").setExecutor(new XLangCommand(this));
-        getCommand("xlang").setTabCompleter(new XLangTabCompleter(this));
+        getCommand("xlang").setTabCompleter(new XLangTabCompleter());
 
     }
 
     private void loadConfig() {
         getConfig().options().header("Change the config settings below");
+        // API Key for DeepL Translator, provided by server owner
         getConfig().addDefault("deepl.apiKey", "XXX");
+        // Whether or not the user is using Premium API Access
         getConfig().addDefault("deepl.premiumDeepl", false);
+        // Total used character amount (Out of 500,000 max on free API),
+        // accessible via config or command
+        getConfig().addDefault("deepl.totalUsedCharacters", 0);
+        // Target language for translation service
         getConfig().addDefault("language.targetLanguageCode", "EN-GB");
+        // Whether or not the translator should target player locale.
+        // Note: Massively increases API usage.
         getConfig().addDefault("language.perPlayerLanguage", false);
+        // Translated color to the player
         getConfig().addDefault("colour.ownMessageTranslatedColour", "#63d3ff");
+        // Translated color to other players
         getConfig().addDefault("colour.messageTranslatedColour", "#a1ffb0");
+        // Whether or not to comment on the translation (after message)
         getConfig().addDefault("chat.addXLangTranslationComment", true);
 
         getConfig().options().copyDefaults(true);

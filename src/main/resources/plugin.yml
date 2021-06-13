@@ -15,6 +15,7 @@ permissions:
   XLang.*:
     description: Gives access to all XLang Commands
     children:
+      XLang.getUsedCharacters: true
       XLang.setlanguage : true
       XLang.setmode : true
       XLang.reload: true
@@ -24,6 +25,9 @@ permissions:
     default: op
   Xlang.setmode:
     description: Allows you to set the translation mode
+    default: op
+  XLang.getUsedCharacters:
+    description: Allows you to see the number of translated characters
     default: op
   XLang.reload:
     description: Allows you to reload the plugin config

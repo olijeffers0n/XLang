@@ -66,7 +66,7 @@ public class Chat implements Listener {
 
             extra = " || Translated to " + playerLocales.size() + " locale/s";
 
-        }else {
+        } else {
             Language language = this.plugin.detector.detectLanguageOf(message);
             String sourceLanguage = this.plugin.languageCodes.get(language.name().toLowerCase());
             if (sourceLanguage != null)
@@ -124,6 +124,12 @@ public class Chat implements Listener {
     }
 
     private String getTranslationForText(String input, String language) {
+        // Add the total number of used characters for the translated locale.
+    	
+    	int usedCharacters = this.plugin.getConfig().getInt("deepl.totalUsedCharacters");
+    	this.plugin.getConfig().set("deepl.totalUsedCharacters", usedCharacters + input.length());
+    	this.plugin.saveConfig();
+    	
         return StringUtils.capitalize(this.plugin.translator.getTranslation(input.toLowerCase(), language));
     }
 
