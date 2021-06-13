@@ -1,6 +1,7 @@
 package com.oli.xlang.commands;
 
 import com.oli.xlang.XLang;
+import com.oli.xlang.util.GetUsedChars;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -81,10 +82,9 @@ public class XLangCommand implements CommandExecutor {
             }
         } else if (args[0].equalsIgnoreCase("getUsedCharacters")) {
             if (sender.hasPermission("Xlang.getUsedCharacters")) {
-            	
-                int usedCharacters = this.plugin.getConfig().getInt("deepl.totalUsedCharacters");
-                sender.sendMessage(ChatColor.GREEN + "Total Translated Characters: " + usedCharacters);
-                
+
+                GetUsedChars.CharInfo info = new GetUsedChars(this.plugin).getChars();
+                sender.sendMessage(ChatColor.GREEN + "Total Translated Characters: " + info.character_count + "/" + info.character_limit);
                 return true;
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission");
