@@ -4,6 +4,7 @@ import com.github.pemistahl.lingua.api.LanguageDetector;
 import com.oli.xlang.commands.XLangCommand;
 import com.oli.xlang.commands.XLangTabCompleter;
 import com.oli.xlang.listeners.Chat;
+import com.oli.xlang.listeners.Join;
 import com.oli.xlang.translator.Translator;
 import com.oli.xlang.util.InitLangDetector;
 import com.oli.xlang.util.ParameterBuilder;
@@ -41,6 +42,7 @@ public class XLang extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(new Chat(this), this);
+        Bukkit.getPluginManager().registerEvents(new Join(this), this);
         this.parameterStringBuilder = new ParameterBuilder();
         this.translator = new Translator(this);
 
@@ -68,7 +70,7 @@ public class XLang extends JavaPlugin implements Listener {
         }
 
         getCommand("xlang").setExecutor(new XLangCommand(this));
-        getCommand("xlang").setTabCompleter(new XLangTabCompleter());
+        getCommand("xlang").setTabCompleter(new XLangTabCompleter(this));
 
     }
 
@@ -89,6 +91,12 @@ public class XLang extends JavaPlugin implements Listener {
         getConfig().addDefault("colour.messageTranslatedColour", "#a1ffb0");
         // Whether or not to comment on the translation (after message)
         getConfig().addDefault("chat.addXLangTranslationComment", true);
+        // Whether or not to inform players about XLang's presence on the server.
+        getConfig().addDefault("chat.enableJoinMessage", true);
+        // If the above is enabled, the message to send players.
+        getConfig().addDefault("chat.joinMessage", "This server uses XLang to translate all messages to <lang>.");
+        // Whether or not to translate the join message to the player's locale.
+        getConfig().addDefault("chat.translateJoinMessage", false);
 
         getConfig().options().copyDefaults(true);
 

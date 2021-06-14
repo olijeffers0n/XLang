@@ -6,16 +6,30 @@ import com.oli.xlang.XLang;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Translator {
 
+    private final Set<String> validLocales = new HashSet<>(Arrays.asList("el","sv","de","es","da","ru","sk","it","lt","hu","nl","fi","zh","ja","et","sl","pl","ro","fr","cs","lv"));
     private XLang plugin;
-
+    
     public Translator(XLang plugin) {
         this.plugin = plugin;
+    }
+
+    public String getDeeplCode(String locale) {
+        String countryCode = locale.split("_")[0];
+
+        if (countryCode.equalsIgnoreCase("en")) return "EN-GB";
+        else if (countryCode.equalsIgnoreCase("bg")) return "BG";
+        else if (countryCode.equalsIgnoreCase("pt")) return "PT-PT";
+        else if (this.validLocales.contains(countryCode)) return countryCode.toUpperCase();
+        else return "";
     }
 
     public String getTranslation(String input, String language) {

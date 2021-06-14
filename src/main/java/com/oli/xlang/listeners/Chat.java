@@ -19,8 +19,7 @@ import java.util.*;
 public class Chat implements Listener {
 
     private final XLang plugin;
-    private final Set<String> validLocales = new HashSet<>(Arrays.asList("el","sv","de","es","da","ru","sk","it","lt","hu","nl","fi","zh","ja","et","sl","pl","ro","fr","cs","lv"));
-
+    
     public Chat(XLang plugin) {
         this.plugin = plugin;
     }
@@ -115,7 +114,7 @@ public class Chat implements Listener {
         Map<String, String> translations = new HashMap<>();
 
         locales.forEach( locale -> {
-            String isoKey = getDeeplCode(locale);
+            String isoKey = this.plugin.translator.getDeeplCode(locale);
             if (!isoKey.equals("")) translations.put(locale, this.getTranslationForText(message, isoKey));
         });
 
@@ -131,15 +130,5 @@ public class Chat implements Listener {
     	this.plugin.saveConfig();
     	
         return StringUtils.capitalize(this.plugin.translator.getTranslation(input.toLowerCase(), language));
-    }
-
-    private String getDeeplCode(String locale) {
-        String countryCode = locale.split("_")[0];
-
-        if (countryCode.equalsIgnoreCase("en")) return "EN-GB";
-        else if (countryCode.equalsIgnoreCase("bg")) return "BG";
-        else if (countryCode.equalsIgnoreCase("pt")) return "PT-PT";
-        else if (this.validLocales.contains(countryCode)) return countryCode.toUpperCase();
-        else return "";
     }
 }
