@@ -70,7 +70,7 @@ public class XLang extends JavaPlugin implements Listener {
         }
 
         getCommand("xlang").setExecutor(new XLangCommand(this));
-        getCommand("xlang").setTabCompleter(new XLangTabCompleter(this));
+        getCommand("xlang").setTabCompleter(new XLangTabCompleter());
 
     }
 

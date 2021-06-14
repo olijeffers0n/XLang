@@ -1,6 +1,5 @@
 package com.oli.xlang.commands;
 
-import com.oli.xlang.XLang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -10,12 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class XLangTabCompleter implements TabCompleter {
-
-    private XLang plugin;
-
-    public XLangTabCompleter(XLang plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args) {
