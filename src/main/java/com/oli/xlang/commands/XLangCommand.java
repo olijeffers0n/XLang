@@ -26,7 +26,10 @@ public class XLangCommand implements CommandExecutor {
 
         if (!command.getName().equalsIgnoreCase("xlang")) return false;
 
-        //this.plugin.headApiInterface.openFullLanguageInventory((Player) sender);
+        /*
+        this.plugin.headApiInterface.openFullLanguageInventory((Player) sender);
+        This is to show the inventory ^^ I have not implemented it yet
+         */
 
         if(args.length == 0) {
             sendHelpMessage(sender);

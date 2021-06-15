@@ -4,6 +4,7 @@ import com.github.pemistahl.lingua.api.LanguageDetector;
 import com.oli.xlang.commands.XLangCommand;
 import com.oli.xlang.commands.XLangTabCompleter;
 import com.oli.xlang.headapi.HeadApiInterface;
+import com.oli.xlang.listeners.ChangeLanguage;
 import com.oli.xlang.listeners.Chat;
 import com.oli.xlang.listeners.InventoryInteract;
 import com.oli.xlang.listeners.Join;
@@ -14,6 +15,7 @@ import com.oli.xlang.util.ParameterBuilder;
 import com.oli.xlang.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +36,7 @@ public class XLang extends JavaPlugin {
     public Translator translator;
     public Map<String, String> languageCodes;
     public Map<String, String> headCodes;
+    public NamespacedKey key;
 
     @Override
     public void onLoad() {
@@ -50,6 +53,9 @@ public class XLang extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        this.key = new NamespacedKey(this, "CustomLocale");
+
         this.headApiInterface = new HeadApiInterface(this);
         this.parameterStringBuilder = new ParameterBuilder();
         this.translator = new Translator(this);
@@ -57,6 +63,7 @@ public class XLang extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new Chat(this), this);
         Bukkit.getPluginManager().registerEvents(new Join(this), this);
         Bukkit.getPluginManager().registerEvents(new InventoryInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new ChangeLanguage(this), this);
 
         loadConfig();
 

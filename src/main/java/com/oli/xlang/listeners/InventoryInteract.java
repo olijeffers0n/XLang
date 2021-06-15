@@ -28,7 +28,7 @@ public class InventoryInteract implements Listener {
         if (item.getType() != Material.PLAYER_HEAD) return;
         String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
         if (!this.plugin.headCodes.containsKey(name)) return;
-        Bukkit.getPluginManager().callEvent(new SelectNewLanguageEvent(name));
+        Bukkit.getPluginManager().callEvent(new SelectNewLanguageEvent(name, "player", event.getWhoClicked().getUniqueId()));
     }
 
     @EventHandler
