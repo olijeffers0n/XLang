@@ -8,6 +8,8 @@ import com.oli.xlang.listeners.Join;
 import com.oli.xlang.translator.Translator;
 import com.oli.xlang.util.InitLangDetector;
 import com.oli.xlang.util.ParameterBuilder;
+
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -74,6 +76,13 @@ public class XLang extends JavaPlugin implements Listener {
 
         getCommand("xlang").setExecutor(new XLangCommand(this));
         getCommand("xlang").setTabCompleter(new XLangTabCompleter());
+        
+        
+        // bStats Config
+        
+        int pluginId = 11694;
+        
+        Metrics metrics = new Metrics(this, pluginId);
 
     }
 
