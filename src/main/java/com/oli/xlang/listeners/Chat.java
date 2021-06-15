@@ -37,7 +37,7 @@ public class Chat implements Listener {
 
         String targetColour = this.plugin.getConfig().getString("colour.messageTranslatedColour");
         String sourceColour = this.plugin.getConfig().getString("colour.ownMessageTranslatedColour");
-        String extra = "";
+        String extra;
 
         if (this.plugin.getConfig().getBoolean("perPlayerLanguage")) {
             Set<Player> recipients = event.getRecipients();

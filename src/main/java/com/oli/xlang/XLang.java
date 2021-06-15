@@ -9,7 +9,7 @@ import com.oli.xlang.translator.Translator;
 import com.oli.xlang.util.InitLangDetector;
 import com.oli.xlang.util.ParameterBuilder;
 
-import org.bstats.bukkit.Metrics;
+import com.oli.xlang.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -76,13 +76,25 @@ public class XLang extends JavaPlugin implements Listener {
 
         getCommand("xlang").setExecutor(new XLangCommand(this));
         getCommand("xlang").setTabCompleter(new XLangTabCompleter());
-        
-        
+
+
         // bStats Config
-        
-        int pluginId = 11694;
-        
-        Metrics metrics = new Metrics(this, pluginId);
+
+        Metrics metrics = new Metrics(this, 11694);
+
+        metrics.addCustomChart(new Metrics.SimplePie("translation_mode", () -> {
+            boolean isPerPlayer = getConfig().getBoolean("language.perPlayerLanguage");
+            if (isPerPlayer) return "perPlayerTranslations";
+            else return "globalTranslations";
+        }));
+
+        metrics.addCustomChart(new Metrics.SimplePie("target_language", () -> {
+            return getConfig().getString("language.targetLanguageCode");
+        }));
+
+        metrics.addCustomChart(new Metrics.SimplePie("premium_deepl", () -> {
+            return getConfig().getString("deepl.premiumDeepl");
+        }));
 
     }
 
