@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class ChatTranslateEvent extends Event {
 
-
     private final String message;
     private Map<String, String> translations;
     private static final HandlerList HANDLERS_LIST = new HandlerList();

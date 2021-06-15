@@ -3,7 +3,9 @@ package com.oli.xlang;
 import com.github.pemistahl.lingua.api.LanguageDetector;
 import com.oli.xlang.commands.XLangCommand;
 import com.oli.xlang.commands.XLangTabCompleter;
+import com.oli.xlang.headapi.HeadApiInterface;
 import com.oli.xlang.listeners.Chat;
+import com.oli.xlang.listeners.InventoryInteract;
 import com.oli.xlang.listeners.Join;
 import com.oli.xlang.translator.Translator;
 import com.oli.xlang.util.InitLangDetector;
@@ -14,7 +16,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -23,19 +24,24 @@ import java.util.HashMap;
 
 import java.util.Map;
 
-public class XLang extends JavaPlugin implements Listener {
+public class XLang extends JavaPlugin {
 
+    public HeadApiInterface headApiInterface;
     public URL url;
     public ParameterBuilder parameterStringBuilder;
     public LanguageDetector detector;
     public InitLangDetector initLangDetector;
     public Translator translator;
     public Map<String, String> languageCodes;
+    public Map<String, String> headCodes;
 
     @Override
     public void onLoad() {
 
-        if (Bukkit.getWorlds().size() != 0) Bukkit.shutdown();
+        if (Bukkit.getWorlds().size() != 0) {
+            getLogger().severe("You have reloaded the server. This Messes with XLangs language detection. Stopping the server!");
+            Bukkit.shutdown();
+        }
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Starting the Language Service");
         this.initLangDetector = new InitLangDetector(this);
@@ -44,12 +50,13 @@ public class XLang extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-
-        Bukkit.getPluginManager().registerEvents(this, this);
-        Bukkit.getPluginManager().registerEvents(new Chat(this), this);
-        Bukkit.getPluginManager().registerEvents(new Join(this), this);
+        this.headApiInterface = new HeadApiInterface(this);
         this.parameterStringBuilder = new ParameterBuilder();
         this.translator = new Translator(this);
+
+        Bukkit.getPluginManager().registerEvents(new Chat(this), this);
+        Bukkit.getPluginManager().registerEvents(new Join(this), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryInteract(this), this);
 
         loadConfig();
 
@@ -63,6 +70,13 @@ public class XLang extends JavaPlugin implements Listener {
         try {
             this.languageCodes = new HashMap<>();
             loadLanguageCodes();
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            this.headCodes = new HashMap<>();
+            loadHeads();
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
@@ -134,6 +148,15 @@ public class XLang extends JavaPlugin implements Listener {
         configuration.load(getDataFolder() + File.separator + "languages.yml");
         for (String key : configuration.getConfigurationSection("Map").getKeys(false)) {
             this.languageCodes.put(key, configuration.getString("Map."+key));
+        }
+    }
+
+    private void loadHeads() throws IOException, InvalidConfigurationException {
+        saveResource("heads.yml", true);
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.load(getDataFolder() + File.separator + "heads.yml");
+        for (String key : configuration.getConfigurationSection("Map").getKeys(false)) {
+            this.headCodes.put(key, configuration.getString("Map."+key));
         }
     }
 }

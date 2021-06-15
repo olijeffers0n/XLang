@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,6 +25,8 @@ public class XLangCommand implements CommandExecutor {
     public boolean onCommand( CommandSender sender, Command command, String s, String[] args) {
 
         if (!command.getName().equalsIgnoreCase("xlang")) return false;
+
+        //this.plugin.headApiInterface.openFullLanguageInventory((Player) sender);
 
         if(args.length == 0) {
             sendHelpMessage(sender);
