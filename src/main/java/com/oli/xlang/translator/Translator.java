@@ -24,6 +24,7 @@ public class Translator {
 
     public String getDeeplCode(String locale) {
         String countryCode = locale.split("_")[0];
+        if (locale.toUpperCase().equals(locale)) return locale;
 
         if (countryCode.equalsIgnoreCase("en")) return "EN-GB";
         else if (countryCode.equalsIgnoreCase("bg")) return "BG";

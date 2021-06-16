@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
@@ -45,17 +46,28 @@ public class Chat implements Listener {
             event.setCancelled(true);
 
             Set<String> playerLocales = new HashSet<>();
-            recipients.forEach( player -> playerLocales.add(player.getLocale()));
+            recipients.forEach( player -> {
+                if (player.getPersistentDataContainer().has(this.plugin.key, PersistentDataType.STRING)) {
+                    playerLocales.add(player.getPersistentDataContainer().get(this.plugin.key, PersistentDataType.STRING));
+                }else
+                    playerLocales.add(player.getLocale());
+            });
 
             Map<String, String> messagesPerLocale = this.getAllLocaleTranslation(playerLocales, message);
 
             recipients.forEach( player -> {
                 TextComponent textComponent;
                 String colour;
-                if (messagesPerLocale.containsKey(player.getLocale())) {
+                String targetLocale;
+                if (player.getPersistentDataContainer().has(this.plugin.key, PersistentDataType.STRING)) {
+                    targetLocale = player.getPersistentDataContainer().get(this.plugin.key, PersistentDataType.STRING);
+                }else
+                    targetLocale = player.getLocale();
+
+                if (messagesPerLocale.containsKey(targetLocale)) {
                     if (player.getUniqueId().equals(sender.getUniqueId())) colour = sourceColour;
                     else colour = targetColour;
-                    textComponent = this.textComponentBuilder(message, messagesPerLocale.get(player.getLocale()), sender.getDisplayName(), colour, true);
+                    textComponent = this.textComponentBuilder(message, messagesPerLocale.get(targetLocale), sender.getDisplayName(), colour, true);
                 } else {
                     textComponent = this.textComponentBuilder(message, message, sender.getDisplayName(), targetColour, false);
                 }
