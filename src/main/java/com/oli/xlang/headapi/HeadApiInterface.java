@@ -22,8 +22,8 @@ public class HeadApiInterface {
         return SkullCreator.itemFromUrl(mojangUrl);
     }
 
-    public void openFullLanguageInventory(Player player) {
-        Inventory inventory = Bukkit.createInventory(null, 54, "Choose a Language:");
+    public void openFullLanguageInventory(Player player, String server) {
+        Inventory inventory = Bukkit.createInventory(null, 54, "Choose a "+ server + "Language:");
         for (String key : this.plugin.headCodes.keySet()) {
             ItemStack head = getHead(this.plugin.headCodes.get(key));
             ItemMeta meta = head.getItemMeta();

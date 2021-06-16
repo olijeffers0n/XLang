@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,7 +23,7 @@ public class XLangCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand( CommandSender sender, Command command, String s, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if (!command.getName().equalsIgnoreCase("xlang")) return false;
 
@@ -74,10 +75,12 @@ public class XLangCommand implements CommandExecutor {
                         return true;
                     } else {
                         sender.sendMessage(ChatColor.RED + "That is not a valid language, please use one of the languages provided.");
+                        return true;
                     }
 
                 } else {
-	                this.plugin.headApiInterface.openFullLanguageInventory((Player) sender);
+	                this.plugin.headApiInterface.openFullLanguageInventory((Player) sender, "Server ");
+	                return true;
                 }
             	
             }

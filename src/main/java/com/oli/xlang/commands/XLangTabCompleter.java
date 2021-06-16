@@ -3,6 +3,7 @@ package com.oli.xlang.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,7 @@ import java.util.List;
 public class XLangTabCompleter implements TabCompleter {
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if (command.getName().equalsIgnoreCase("xlang")) {
 
@@ -34,8 +35,7 @@ public class XLangTabCompleter implements TabCompleter {
                     }else return new ArrayList<>();
                 }else if (args[0].equalsIgnoreCase("setTargetLanguage")) {
                     if (sender.hasPermission("XLang.setlanguage")) {
-                        List<String> argStrings = Arrays.asList("EL", "SV", "DE", "ES", "DA", "RU", "SK", "IT", "LT", "HU", "NL", "FI", "ZH", "JA", "ET", "SL", "EN-GB", "PT-PT", "BG", "PL", "RO", "FR", "CS", "LV");
-                        return argStrings;
+                        return Arrays.asList("GUI", "EL", "SV", "DE", "ES", "DA", "RU", "SK", "IT", "LT", "HU", "NL", "FI", "ZH", "JA", "ET", "SL", "EN-GB", "PT-PT", "BG", "PL", "RO", "FR", "CS", "LV");
                     }else return new ArrayList<>();
                 }
             }

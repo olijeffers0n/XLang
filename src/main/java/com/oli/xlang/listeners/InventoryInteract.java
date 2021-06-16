@@ -22,7 +22,9 @@ public class InventoryInteract implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!event.getView().getTitle().equalsIgnoreCase("Choose a Language:")) return;
+
+        String title = event.getView().getTitle();
+        if (!(title.equalsIgnoreCase("Choose a Language:") || title.equalsIgnoreCase("Choose a Server Language:"))) return;
         
         Player player = (Player) event.getWhoClicked();
         ItemStack item = event.getCurrentItem();
@@ -33,20 +35,23 @@ public class InventoryInteract implements Listener {
         if (item.getType() != Material.PLAYER_HEAD) return;
         
         String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-        if (!this.plugin.headCodes.containsKey(name))
-        {
+        if (!this.plugin.headCodes.containsKey(name)) {
         	player.sendMessage(ChatColor.RED + "That is not a valid language.");
         	player.closeInventory();
         }
-        
-        Bukkit.getPluginManager().callEvent(new SelectNewLanguageEvent(name, "console", event.getWhoClicked().getUniqueId()));
+
+        if (title.equalsIgnoreCase("Choose a Language:"))
+            Bukkit.getPluginManager().callEvent(new SelectNewLanguageEvent(name, "player", event.getWhoClicked().getUniqueId()));
+        else
+            Bukkit.getPluginManager().callEvent(new SelectNewLanguageEvent(name, "console", event.getWhoClicked().getUniqueId()));
         player.sendMessage(ChatColor.GREEN + "The Target Language has been set to " + ChatColor.AQUA + name + ChatColor.GREEN + "!");
     	player.closeInventory();
     }
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
-        if (!event.getView().getTitle().equalsIgnoreCase("Choose a Language:")) return;
+        String title = event.getView().getTitle();
+        if (!(title.equalsIgnoreCase("Choose a Language:") || title.equalsIgnoreCase("Choose a Server Language:"))) return;
         event.setCancelled(true);
     }
 }

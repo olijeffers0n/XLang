@@ -11,6 +11,12 @@ commands:
     usage: /<command><args>
     aliases:
       - xl
+  setlanguage:
+    description: Sets the players preferred locale
+    usage: /<command>
+    aliases:
+      - setlang
+      - lang
 permissions:
   XLang.*:
     description: Gives access to all XLang Commands

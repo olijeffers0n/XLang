@@ -18,10 +18,12 @@ public class ChangeLanguage implements Listener {
 
     @EventHandler
     public void onLanguageChange(SelectNewLanguageEvent event) {
-        if (event.getWho().equalsIgnoreCase("player")) {
+        if (event.getWho().equalsIgnoreCase("player")) { //Player wanted the change to their pdc
             Player player = Bukkit.getPlayer(event.getUuid());
             player.getPersistentDataContainer().set(this.plugin.key, PersistentDataType.STRING, event.getLanguageCode());
+
         } else {  // The other case would be "console" to represent a server wide change
+
             this.plugin.getConfig().set("language.targetLanguageCode", event.getLanguageCode());
             this.plugin.saveConfig();
             this.plugin.reloadConfig();
