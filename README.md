@@ -1,2 +1,1 @@
-# XLang
-A Spigot Plugin for providing real time chat translations
+![xlang forward icon](https://github.com/Evil-Space-Wizard/XLang/blob/img/icon.png?raw=true)
