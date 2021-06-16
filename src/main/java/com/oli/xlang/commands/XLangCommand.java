@@ -73,6 +73,9 @@ public class XLangCommand implements CommandExecutor {
                         this.plugin.reloadConfig();
                         sender.sendMessage(ChatColor.GREEN + "The Language has been set!");
                         return true;
+                    }else if (args[1].equalsIgnoreCase("[GUI]")) {
+                        this.plugin.headApiInterface.openFullLanguageInventory((Player) sender, "Server ");
+                        return true;
                     } else {
                         sender.sendMessage(ChatColor.RED + "That is not a valid language, please use one of the languages provided.");
                         return true;

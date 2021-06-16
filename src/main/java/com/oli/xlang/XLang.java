@@ -1,6 +1,7 @@
 package com.oli.xlang;
 
 import com.github.pemistahl.lingua.api.LanguageDetector;
+
 import com.oli.xlang.commands.SetLanguage;
 import com.oli.xlang.commands.XLangCommand;
 import com.oli.xlang.commands.XLangTabCompleter;
@@ -12,8 +13,8 @@ import com.oli.xlang.listeners.Join;
 import com.oli.xlang.translator.Translator;
 import com.oli.xlang.util.InitLangDetector;
 import com.oli.xlang.util.ParameterBuilder;
-
 import com.oli.xlang.bstats.Metrics;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -24,7 +25,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
-
 import java.util.Map;
 
 public class XLang extends JavaPlugin {
@@ -60,6 +60,18 @@ public class XLang extends JavaPlugin {
         this.headApiInterface = new HeadApiInterface(this);
         this.parameterStringBuilder = new ParameterBuilder();
         this.translator = new Translator(this);
+
+        try {
+            Class.forName("com.github.pemistahl.lingua.api.LanguageDetectorBuilder");
+        }catch (ClassNotFoundException ignored) {
+            getLogger().severe("______________________________________________");
+            getLogger().severe("YOU DO NOT HAVE THE LANGUAGE LIBRARY AVAILABLE");
+            getLogger().severe("You are Running: " + Bukkit.getVersion() + ", You must have <= 1.16.5");
+            getLogger().severe("If you are running 1.16.5 you may need to update your build as you do not have the 'libraries' feature");
+            getLogger().severe("______________________________________________");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         Bukkit.getPluginManager().registerEvents(new Chat(this), this);
         Bukkit.getPluginManager().registerEvents(new Join(this), this);
