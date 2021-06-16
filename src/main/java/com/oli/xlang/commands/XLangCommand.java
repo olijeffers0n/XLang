@@ -67,6 +67,8 @@ public class XLangCommand implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("setTargetLanguage")) {
             if (sender.hasPermission("Xlang.setlanguage")) {
                 if (args.length == 2) {
+                	// Set Default to EN-GB
+                	if (args[1].equalsIgnoreCase("[DEFAULT]")) args[1] = "EN-GB";
                     if (this.validLanguages.contains(args[1])) {
                         this.plugin.getConfig().set("language.targetLanguageCode", args[1]);
                         this.plugin.saveConfig();
