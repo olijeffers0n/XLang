@@ -7,7 +7,7 @@
 ## Using XLang
 #### Why have a translator?
 
-Your server's native language doesn't matter: there will always be a massive population of players who will never be able to set foot on it if they do not understand what is being told to them. XLang works to amend this by using DeepL's artificial intellgience-assisted translation service to translate both incoming and outgoing chat messages to an abundance of internationally spoken dialects.
+Your server's native language doesn't matter: there will always be a massive population of players who will never be able to set foot on it if they do not understand what is being told to them. XLang works to amend this by using DeepL's artificial intellgience-assisted translation service to translate both incoming and outgoing chat messages to an abundance of internationally spoken dialects. <a href="https://github.com/olijeffers0n/XLang/wiki/Supported-Languages">View Supported Languages</a>
 #### Installing XLang
 
 XLang does the heavy lifting for you. All you need is a free API Key from <a href="https://www.deepl.com/pro/change-plan?/pro?cta=header-prices#developer">DeepL</a>. This will allow you to translate 500,000 Characters (On Average, roughly 12,500 messages) Per month. For large servers, a <a href="https://www.deepl.com/pro/change-plan?/pro?cta=header-prices#developer">DeepL Pro</a> plan is recommended. The Free plan is more than enough for any other size.
