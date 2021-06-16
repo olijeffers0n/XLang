@@ -4,6 +4,7 @@ import com.oli.xlang.XLang;
 import com.oli.xlang.events.SelectNewLanguageEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -15,11 +16,12 @@ public class ChangeLanguage implements Listener {
         this.plugin = plugin;
     }
 
+    @EventHandler
     public void onLanguageChange(SelectNewLanguageEvent event) {
         if (event.getWho().equalsIgnoreCase("player")) {
             Player player = Bukkit.getPlayer(event.getUuid());
             player.getPersistentDataContainer().set(this.plugin.key, PersistentDataType.STRING, event.getLanguageCode());
-        }else {  // The other case would be "console" to represent a server wide change
+        } else {  // The other case would be "console" to represent a server wide change
             this.plugin.getConfig().set("language.targetLanguageCode", event.getLanguageCode());
             this.plugin.saveConfig();
             this.plugin.reloadConfig();

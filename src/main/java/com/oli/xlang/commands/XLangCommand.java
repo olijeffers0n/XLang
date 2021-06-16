@@ -26,11 +26,6 @@ public class XLangCommand implements CommandExecutor {
 
         if (!command.getName().equalsIgnoreCase("xlang")) return false;
 
-        /*
-        this.plugin.headApiInterface.openFullLanguageInventory((Player) sender);
-        This is to show the inventory ^^ I have not implemented it yet
-         */
-
         if(args.length == 0) {
             sendHelpMessage(sender);
             return true;
@@ -82,9 +77,9 @@ public class XLangCommand implements CommandExecutor {
                     }
 
                 } else {
-                    sender.sendMessage(ChatColor.RED + "A Language argument is required");
-                    return true;
+	                this.plugin.headApiInterface.openFullLanguageInventory((Player) sender);
                 }
+            	
             }
         } else if (args[0].equalsIgnoreCase("getUsedCharacters")) {
             if (sender.hasPermission("Xlang.getUsedCharacters")) {
