@@ -91,16 +91,9 @@ public class XLangCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You do not have permission");
                 return true;
             }
-        } else if (args[0].equalsIgnoreCase("setLanguage")) {
-        	
         }
         sendHelpMessage(sender);
         return true;
-
-        /*
-        this.plugin.headApiInterface.openFullLanguageInventory((Player) sender);
-        This is to show the inventory ^^ I have not implemented it yet
-         */
     }
 
 
