@@ -15,12 +15,14 @@ import com.oli.xlang.util.InitLangDetector;
 import com.oli.xlang.util.ParameterBuilder;
 import com.oli.xlang.bstats.Metrics;
 
+import com.oli.xlang.versionchecker.VersionChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
 import java.net.*;
@@ -131,6 +133,19 @@ public class XLang extends JavaPlugin {
             return getConfig().getString("deepl.premiumDeepl");
         }));
 
+        VersionChecker versionChecker = VersionChecker.init(this, 555); //// <- PlaceHolder ID
+        versionChecker.requestUpdateCheck();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (versionChecker.getLastResult() == null) return;
+                if (versionChecker.getLastResult().requiresUpdate()) {
+                    getLogger().warning("XLang is not up to date. Please update for optimal performance & features");
+                }
+                cancel();
+            }
+        }.runTaskTimer(this, 5L, 2L);
     }
 
     private void loadConfig() {
