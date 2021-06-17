@@ -16,7 +16,7 @@ import java.util.Set;
 public class XLangCommand implements CommandExecutor {
 
     private final XLang plugin;
-    private final Set<String> validLanguages = new HashSet<>(Arrays.asList("EL","SV","DE","ES","DA","RU","SK","IT","LT","HU","NL","FI","ZH","JA","ET","SL","EN-GB","PT-PT","BG","PL","RO","FR","CS","LV"));
+    private final Set<String> validLanguages = new HashSet<>(Arrays.asList("EL","SV","DE","ES","DA","RU","SK","IT","LT","HU","NL","FI","ZH","JA","ET","SL","EN-GB","EN-US","PT-PT","BG","PL","RO","FR","CS","LV"));
 
     public XLangCommand(XLang plugin) {
         this.plugin = plugin;
