@@ -42,40 +42,28 @@ public class Chat implements Listener {
 
         if (this.plugin.getConfig().getBoolean("language.perPlayerLanguage")) {
             Set<Player> recipients = event.getRecipients();
+            Map<String, Set<UUID>> targetPlayerLanguages = new HashMap<>();
 
             event.setCancelled(true);
 
-            Set<String> playerLocales = new HashSet<>();
             recipients.forEach( player -> {
+                String playerLocale;
                 if (player.getPersistentDataContainer().has(this.plugin.key, PersistentDataType.STRING)) {
-                    playerLocales.add(player.getPersistentDataContainer().get(this.plugin.key, PersistentDataType.STRING));
+                    playerLocale = player.getPersistentDataContainer().get(this.plugin.key, PersistentDataType.STRING);
                 }else
-                    playerLocales.add(player.getLocale());
+                    playerLocale = player.getLocale();
+                String isoKey = this.plugin.translator.getDeeplCode(playerLocale);
+
+                Set<UUID> uuids = targetPlayerLanguages.getOrDefault(isoKey, new HashSet<>());
+                uuids.add(player.getUniqueId());
+                targetPlayerLanguages.put(isoKey, uuids);
             });
 
-            Map<String, String> messagesPerLocale = this.getAllLocaleTranslation(playerLocales, message);
+            Map<String, String> messagesPerLocale = this.sendAllTranslations(targetPlayerLanguages, sender.getUniqueId(), message, sourceColour, targetColour);
 
-            recipients.forEach( player -> {
-                TextComponent textComponent;
-                String colour;
-                String targetLocale;
-                if (player.getPersistentDataContainer().has(this.plugin.key, PersistentDataType.STRING)) {
-                    targetLocale = player.getPersistentDataContainer().get(this.plugin.key, PersistentDataType.STRING);
-                }else
-                    targetLocale = player.getLocale();
-
-                if (messagesPerLocale.containsKey(targetLocale)) {
-                    if (player.getUniqueId().equals(sender.getUniqueId())) colour = sourceColour;
-                    else colour = targetColour;
-                    textComponent = this.textComponentBuilder(message, messagesPerLocale.get(targetLocale), sender.getDisplayName(), colour, true);
-                } else {
-                    textComponent = this.textComponentBuilder(message, message, sender.getDisplayName(), targetColour, false);
-                }
-                player.spigot().sendMessage(textComponent);
-            });
             Bukkit.getScheduler().runTask(this.plugin, () -> Bukkit.getPluginManager().callEvent(new ChatTranslateEvent(message, messagesPerLocale)));
 
-            extra = " || Translated to " + playerLocales.size() + " locale/s";
+            extra = " || Translated to " + targetPlayerLanguages.size() + " locale/s";
 
         } else {
             Language language = this.plugin.detector.detectLanguageOf(message);
@@ -121,17 +109,35 @@ public class Chat implements Listener {
         return textComponent;
     }
 
-    private Map<String, String> getAllLocaleTranslation(Set<String> locales, String message){
+    private Map<String, String> sendAllTranslations(Map<String, Set<UUID>> languageCodes, UUID senderUUID, String message, String sourceColour, String targetColour) {
+        Map<String, String> messagesPerLocale = new HashMap<>();
+        for (String language : languageCodes.keySet()) {
+            if (!language.equalsIgnoreCase("ERROR")) {
+                String translation = this.getTranslationForText(message, language);
+                messagesPerLocale.put(language, translation);
+                languageCodes.get(language).forEach(uuid -> {
 
-        Map<String, String> translations = new HashMap<>();
+                    Player player = Bukkit.getPlayer(uuid);
 
-        locales.forEach( locale -> {
-            String isoKey = this.plugin.translator.getDeeplCode(locale);
-            if (!isoKey.equalsIgnoreCase("ERROR")) translations.put(locale, this.getTranslationForText(message, isoKey));
-        });
+                    TextComponent textComponent;
+                    String colour;
 
-        return translations;
+                    if (player.getUniqueId().equals(senderUUID)) colour = sourceColour;
+                    else colour = targetColour;
+                    textComponent = this.textComponentBuilder(message, translation, Bukkit.getPlayer(senderUUID).getDisplayName(), colour, true);
 
+                    player.spigot().sendMessage(textComponent);
+                });
+            }else {
+                languageCodes.get(language).forEach(uuid -> {
+                    Player player = Bukkit.getPlayer(uuid);
+                    TextComponent textComponent = this.textComponentBuilder(message, message, Bukkit.getPlayer(senderUUID).getDisplayName(), targetColour, false);
+                    player.spigot().sendMessage(textComponent);
+                });
+            }
+        }
+
+        return messagesPerLocale;
     }
 
     private String getTranslationForText(String input, String language) {

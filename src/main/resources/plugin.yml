@@ -38,3 +38,6 @@ permissions:
   XLang.reload:
     description: Allows you to reload the plugin config
     default: op
+  XLang.setPersonalLanguage:
+    description: Allows the player to run /setLanguage
+    default: not op

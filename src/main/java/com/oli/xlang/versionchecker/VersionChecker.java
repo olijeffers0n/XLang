@@ -30,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
  * {@link #requestUpdateCheck()} are inconsistent with what is published on SpigotMC, it
  * may be due to the REST API cache. Results will be updated in due time.
  *
- * @author Parker Hawke - Choco
  */
 public final class VersionChecker {
 
@@ -54,7 +53,7 @@ public final class VersionChecker {
         return (secondSplit.length > firstSplit.length) ? second : first;
     };
 
-    private static final String USER_AGENT = "CHOCO-update-checker";
+    private static final String USER_AGENT = "update-checker";
     private static final String UPDATE_URL = "https://api.spigotmc.org/simple/0.1/index.php?action=getResource&id=%d";
     private static final Pattern DECIMAL_SCHEME_PATTERN = Pattern.compile("\\d+(?:\\.\\d+)*");
 

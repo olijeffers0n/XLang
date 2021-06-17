@@ -18,6 +18,11 @@ public class SetLanguage implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if (!sender.hasPermission("XLang.setPersonalLanguage")) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission to run this command");
+            return true;
+        }
+
         if (args.length == 0) {
             this.plugin.headApiInterface.openFullLanguageInventory((Player) sender, "");
             return true;
