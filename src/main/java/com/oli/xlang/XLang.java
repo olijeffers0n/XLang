@@ -3,6 +3,7 @@ package com.oli.xlang;
 import com.github.pemistahl.lingua.api.LanguageDetector;
 
 import com.oli.xlang.commands.SetLanguage;
+import com.oli.xlang.commands.SetLanguageTabCompleter;
 import com.oli.xlang.commands.XLangCommand;
 import com.oli.xlang.commands.XLangTabCompleter;
 import com.oli.xlang.headapi.HeadApiInterface;
@@ -114,6 +115,7 @@ public class XLang extends JavaPlugin {
         getCommand("xlang").setTabCompleter(new XLangTabCompleter());
 
         getCommand("setlanguage").setExecutor(new SetLanguage(this));
+        getCommand("setlanguage").setTabCompleter(new SetLanguageTabCompleter());
 
         // bStats Config
 
