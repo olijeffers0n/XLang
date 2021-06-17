@@ -16,7 +16,7 @@ import java.util.Set;
 public class XLangCommand implements CommandExecutor {
 
     private final XLang plugin;
-    private final Set<String> validLanguages = new HashSet<>(Arrays.asList("EL","SV","DE","ES","DA","RU","SK","IT","LT","HU","NL","FI","ZH","JA","ET","SL","EN-GB","PT-PT","BG","PL","RO","FR","CS","LV"));
+    private final Set<String> validLanguages = new HashSet<>(Arrays.asList("EL","SV","DE","ES","DA","RU","SK","IT","LT","HU","NL","FI","ZH","JA","ET","SL","EN-GB","EN-US","PT-PT","BG","PL","RO","FR","CS","LV"));
 
     public XLangCommand(XLang plugin) {
         this.plugin = plugin;
@@ -67,6 +67,8 @@ public class XLangCommand implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("setTargetLanguage")) {
             if (sender.hasPermission("Xlang.setlanguage")) {
                 if (args.length == 2) {
+                	// Set Default to EN-GB
+                	if (args[1].equalsIgnoreCase("[DEFAULT]")) args[1] = "EN-GB";
                     if (this.validLanguages.contains(args[1])) {
                         this.plugin.getConfig().set("language.targetLanguageCode", args[1]);
                         this.plugin.saveConfig();
