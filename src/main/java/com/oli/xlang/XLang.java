@@ -173,6 +173,8 @@ public class XLang extends JavaPlugin {
         getConfig().addDefault("chat.joinMessage", "This server uses XLang to translate all messages to <lang>.");
         // Whether or not to translate the join message to the player's locale.
         getConfig().addDefault("chat.translateJoinMessage", false);
+        // The delay before sending the join message.
+        getConfig().addDefault("chat.joinMessageDelay", 60);
 
         getConfig().options().copyDefaults(true);
 

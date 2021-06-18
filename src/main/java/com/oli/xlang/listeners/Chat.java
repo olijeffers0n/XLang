@@ -80,7 +80,7 @@ public class Chat implements Listener {
             extra = " || Translated to: " + translation;
         }
         if (!this.plugin.getConfig().getBoolean("chat.addXLangTranslationComment")) extra = "";
-        this.plugin.getLogger().info("<" + event.getPlayer().getDisplayName() + "> " + message + extra);
+        System.out.println("<" + event.getPlayer().getDisplayName() + "> " + message + extra);
     }
 
     private TextComponent textComponentBuilder(String original, String translated, String playerName, String colour, String language) {
