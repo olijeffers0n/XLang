@@ -50,13 +50,10 @@ public class Translator {
             out.close();
 
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-
             String content = in.readLine();
             in.close();
             con.disconnect();
-
             Gson gsonInstance = new Gson();
-
             return gsonInstance.fromJson(content, Translations.class).translations.get(0).text;
 
         } catch (Exception e) {

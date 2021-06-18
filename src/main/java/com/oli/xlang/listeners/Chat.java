@@ -2,7 +2,6 @@ package com.oli.xlang.listeners;
 
 import com.github.pemistahl.lingua.api.Language;
 import com.oli.xlang.XLang;
-import com.oli.xlang.events.ChatTranslateEvent;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -16,6 +15,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class Chat implements Listener {
 
@@ -42,26 +42,13 @@ public class Chat implements Listener {
 
         if (this.plugin.getConfig().getBoolean("language.perPlayerLanguage")) {
             Set<Player> recipients = event.getRecipients();
-            Map<String, Set<UUID>> targetPlayerLanguages = new HashMap<>();
+            Set<String> targetPlayerLanguages = new HashSet<>();
 
             event.setCancelled(true);
 
-            recipients.forEach( player -> {
-                String playerLocale;
-                if (player.getPersistentDataContainer().has(this.plugin.key, PersistentDataType.STRING)) {
-                    playerLocale = player.getPersistentDataContainer().get(this.plugin.key, PersistentDataType.STRING);
-                }else
-                    playerLocale = player.getLocale();
-                String isoKey = this.plugin.translator.getDeeplCode(playerLocale);
+            recipients.forEach( player -> targetPlayerLanguages.add(this.getPlayersLanguage(player)));
 
-                Set<UUID> uuids = targetPlayerLanguages.getOrDefault(isoKey, new HashSet<>());
-                uuids.add(player.getUniqueId());
-                targetPlayerLanguages.put(isoKey, uuids);
-            });
-
-            Map<String, String> messagesPerLocale = this.sendAllTranslations(targetPlayerLanguages, sender.getUniqueId(), message, sourceColour, targetColour);
-
-            Bukkit.getScheduler().runTask(this.plugin, () -> Bukkit.getPluginManager().callEvent(new ChatTranslateEvent(message, messagesPerLocale)));
+            this.sendAllTranslationsAsync(targetPlayerLanguages, message, sender, sourceColour, targetColour);
 
             extra = " || Translated to " + targetPlayerLanguages.size() + " locale/s";
 
@@ -73,7 +60,7 @@ public class Chat implements Listener {
 
             event.setCancelled(true);
 
-            String translation = this.getTranslationForText(message, this.plugin.getConfig().getString("language.targetLanguageCode"));
+            String translation = this.getTranslationForText(message, this.plugin.getConfig().getString("language.targetLanguageCode"), message.equals(message.toLowerCase()));
 
             if (message.equalsIgnoreCase(translation)) {
                 event.setCancelled(false);
@@ -84,63 +71,66 @@ public class Chat implements Listener {
 
                 TextComponent textComponent;
                 if (player.getUniqueId().equals(sender.getUniqueId()))
-                    textComponent = this.textComponentBuilder(message, translation, sender.getDisplayName(), sourceColour, true);
+                    textComponent = this.textComponentBuilder(message, translation, sender.getDisplayName(), sourceColour, this.plugin.getConfig().getString("language.targetLanguageCode"));
                 else
-                    textComponent = this.textComponentBuilder(message, translation, sender.getDisplayName(), targetColour, true);
+                    textComponent = this.textComponentBuilder(message, translation, sender.getDisplayName(), targetColour, this.plugin.getConfig().getString("language.targetLanguageCode"));
                 player.spigot().sendMessage(textComponent);
             });
 
-            Bukkit.getScheduler().runTask(this.plugin, () -> Bukkit.getPluginManager().callEvent(new ChatTranslateEvent(message, Collections.singletonMap(language.name(), translation))));
             extra = " || Translated to: " + translation;
         }
         if (!this.plugin.getConfig().getBoolean("chat.addXLangTranslationComment")) extra = "";
         this.plugin.getLogger().info("<" + event.getPlayer().getDisplayName() + "> " + message + extra);
     }
 
-    private TextComponent textComponentBuilder(String original, String translated, String playerName, String colour, Boolean hasBeenTranslated) {
-
+    private TextComponent textComponentBuilder(String original, String translated, String playerName, String colour, String language) {
         TextComponent textComponent = new TextComponent("<" + playerName + "> " + translated);
-        if (hasBeenTranslated) {
-            textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.BLUE + "The Message Has been translated, here is the original: \n" + original)));
-            textComponent.setColor(ChatColor.of(colour));
-        }
-        else textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.RED + "We Unfortunately do not have your locale so could not translate the message")));
+        textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.BLUE + "The Message Has been translated to " + language  + ", here is the original: \n" + original)));
+        textComponent.setColor(ChatColor.of(colour));
 
         return textComponent;
     }
 
-    private Map<String, String> sendAllTranslations(Map<String, Set<UUID>> languageCodes, UUID senderUUID, String message, String sourceColour, String targetColour) {
-        Map<String, String> messagesPerLocale = new HashMap<>();
-        for (String language : languageCodes.keySet()) {
-            if (!language.equalsIgnoreCase("ERROR")) {
-                String translation = this.getTranslationForText(message, language);
-                messagesPerLocale.put(language, translation);
-                languageCodes.get(language).forEach(uuid -> {
-
-                    Player player = Bukkit.getPlayer(uuid);
-
-                    TextComponent textComponent;
-                    String colour;
-
-                    if (player.getUniqueId().equals(senderUUID)) colour = sourceColour;
-                    else colour = targetColour;
-                    textComponent = this.textComponentBuilder(message, translation, Bukkit.getPlayer(senderUUID).getDisplayName(), colour, true);
-
-                    player.spigot().sendMessage(textComponent);
-                });
-            }else {
-                languageCodes.get(language).forEach(uuid -> {
-                    Player player = Bukkit.getPlayer(uuid);
-                    TextComponent textComponent = this.textComponentBuilder(message, message, Bukkit.getPlayer(senderUUID).getDisplayName(), targetColour, false);
-                    player.spigot().sendMessage(textComponent);
-                });
-            }
+    private void sendAllTranslationsAsync(Set<String> languageCodes, String message, Player sender, String sourceColour, String targetColour) {
+        for (String language : languageCodes) {
+            CompletableFuture.supplyAsync(() ->
+                getTranslationForText(message, language, message.equals(message.toLowerCase()))).thenAccept((future) ->
+                    getPlayersOfLanguage(language).forEach((p) -> this.sendMessage(p, message, future, sender, sourceColour, targetColour, language)));
         }
-
-        return messagesPerLocale;
     }
 
-    private String getTranslationForText(String input, String language) {
-        return StringUtils.capitalize(this.plugin.translator.getTranslation(input.toLowerCase(), language));
+    private void sendMessage(Player player, String message, String translation, Player sender, String sourceColour, String targetColour, String language) {
+        String colour;
+        if (player.getUniqueId().equals(sender.getUniqueId())) colour = sourceColour;
+        else colour = targetColour;
+        TextComponent textComponent = this.textComponentBuilder(message, translation, sender.getDisplayName(), colour, language);
+        player.spigot().sendMessage(textComponent);
+    }
+
+    private Set<Player> getPlayersOfLanguage(String languageCode) {
+
+        Set<Player> targetLanguagePlayers = new HashSet<>();
+
+        Bukkit.getOnlinePlayers().forEach( player -> {
+            String isoKey = this.getPlayersLanguage(player);
+            if (isoKey.equalsIgnoreCase(languageCode)) targetLanguagePlayers.add(player);
+        });
+
+        return targetLanguagePlayers;
+    }
+
+    private String getPlayersLanguage(Player player) {
+        String playerLocale;
+        if (player.getPersistentDataContainer().has(this.plugin.key, PersistentDataType.STRING)) {
+            playerLocale = player.getPersistentDataContainer().get(this.plugin.key, PersistentDataType.STRING);
+        }else
+            playerLocale = player.getLocale();
+        return this.plugin.translator.getDeeplCode(playerLocale);
+    }
+
+    private String getTranslationForText(String input, String language, Boolean isLowerCase) {
+        String translation = this.plugin.translator.getTranslation(input.toLowerCase(), language);
+        if (isLowerCase) return translation;
+        else return StringUtils.capitalize(translation);
     }
 }

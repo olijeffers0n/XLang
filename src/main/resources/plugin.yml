@@ -40,4 +40,4 @@ permissions:
     default: op
   XLang.setPersonalLanguage:
     description: Allows the player to run /setLanguage
-    default: not op
+    default: true
