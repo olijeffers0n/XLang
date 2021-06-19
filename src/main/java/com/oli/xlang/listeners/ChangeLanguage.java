@@ -10,7 +10,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class ChangeLanguage implements Listener {
 
-    private XLang plugin;
+    private final XLang plugin;
 
     public ChangeLanguage(XLang plugin) {
         this.plugin = plugin;

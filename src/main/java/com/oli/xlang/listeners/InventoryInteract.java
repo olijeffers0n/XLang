@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventoryInteract implements Listener {
 
-    private XLang plugin;
+    private final XLang plugin;
 
     public InventoryInteract(XLang plugin) {
         this.plugin = plugin;

@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class HeadApiInterface {
 
-    private XLang plugin;
+    private final XLang plugin;
 
     public HeadApiInterface(XLang plugin) {
         this.plugin = plugin;

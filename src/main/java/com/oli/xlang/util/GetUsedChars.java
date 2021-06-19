@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class GetUsedChars {
 
-    private XLang plugin;
+    private final XLang plugin;
 
     public GetUsedChars(XLang plugin) {
         this.plugin = plugin;

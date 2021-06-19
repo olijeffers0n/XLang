@@ -16,7 +16,7 @@ import java.util.Set;
 public class Translator {
 
     private final Set<String> validLocales = new HashSet<>(Arrays.asList("el","sv","de","es","da","ru","sk","it","lt","hu","nl","fi","zh","ja","et","sl","pl","ro","fr","cs","lv"));
-    private XLang plugin;
+    private final XLang plugin;
     
     public Translator(XLang plugin) {
         this.plugin = plugin;

@@ -7,7 +7,7 @@ import org.bukkit.ChatColor;
 
 public class InitLangDetector extends Thread{
 
-    private XLang plugin;
+    private final XLang plugin;
 
     public InitLangDetector(XLang plugin) {
         this.plugin = plugin;

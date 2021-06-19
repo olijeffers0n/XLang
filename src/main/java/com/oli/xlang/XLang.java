@@ -58,12 +58,6 @@ public class XLang extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        this.key = new NamespacedKey(this, "CustomLocale");
-
-        this.headApiInterface = new HeadApiInterface(this);
-        this.parameterStringBuilder = new ParameterBuilder();
-        this.translator = new Translator(this);
-
         try {
             Class.forName("com.github.pemistahl.lingua.api.LanguageDetectorBuilder");
         }catch (ClassNotFoundException ignored) {
@@ -75,6 +69,12 @@ public class XLang extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+
+        this.key = new NamespacedKey(this, "CustomLocale");
+
+        this.headApiInterface = new HeadApiInterface(this);
+        this.parameterStringBuilder = new ParameterBuilder();
+        this.translator = new Translator(this);
 
         Bukkit.getPluginManager().registerEvents(new Chat(this), this);
         Bukkit.getPluginManager().registerEvents(new Join(this), this);
@@ -127,13 +127,11 @@ public class XLang extends JavaPlugin {
             else return "globalTranslations";
         }));
 
-        metrics.addCustomChart(new Metrics.SimplePie("target_language", () -> {
-            return getConfig().getString("language.targetLanguageCode");
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("target_language", () -> getConfig().getString("language.targetLanguageCode")));
 
-        metrics.addCustomChart(new Metrics.SimplePie("premium_deepl", () -> {
-            return getConfig().getString("deepl.premiumDeepl");
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("premium_deepl", () -> getConfig().getString("deepl.premiumDeepl")));
+
+        // Update Checker
 
         VersionChecker versionChecker = VersionChecker.init(this, 555); //// <- PlaceHolder ID
         versionChecker.requestUpdateCheck();
@@ -183,6 +181,7 @@ public class XLang extends JavaPlugin {
     }
 
     private void loadLanguageCodes() throws IOException, InvalidConfigurationException {
+        // Loads all the codes for the languages
         saveResource("languages.yml", true);
         YamlConfiguration configuration = new YamlConfiguration();
         configuration.load(getDataFolder() + File.separator + "languages.yml");
@@ -192,6 +191,7 @@ public class XLang extends JavaPlugin {
     }
 
     private void loadHeads() throws IOException, InvalidConfigurationException {
+        // Loads all the links for the heads
         saveResource("heads.yml", true);
         YamlConfiguration configuration = new YamlConfiguration();
         configuration.load(getDataFolder() + File.separator + "heads.yml");

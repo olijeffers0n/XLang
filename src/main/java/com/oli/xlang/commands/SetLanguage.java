@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SetLanguage implements CommandExecutor {
 
-    private XLang plugin;
+    private final XLang plugin;
 
     public SetLanguage(XLang plugin) {
         this.plugin = plugin;}
