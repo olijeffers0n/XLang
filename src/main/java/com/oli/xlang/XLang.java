@@ -44,12 +44,10 @@ public class XLang extends JavaPlugin {
 
     @Override
     public void onLoad() {
-
-       if (Bukkit.getWorlds().size() != 0) {
-           getLogger().severe("You have reloaded the server. This Messes with XLangs language detection. Stopping the server!");
-           Bukkit.shutdown();
-       }
-
+        if (Bukkit.getWorlds().size() != 0) {
+            getLogger().severe("You have reloaded the server. This Messes with XLangs language detection. Stopping the server!");
+            Bukkit.shutdown();
+        }
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Starting the Language Service");
         this.initLangDetector = new InitLangDetector(this);
         this.initLangDetector.start();
@@ -133,7 +131,7 @@ public class XLang extends JavaPlugin {
 
         // Update Checker
 
-        VersionChecker versionChecker = VersionChecker.init(this, 555); //// <- PlaceHolder ID
+        VersionChecker versionChecker = VersionChecker.init(this, 93455);
         versionChecker.requestUpdateCheck();
 
         new BukkitRunnable() {
