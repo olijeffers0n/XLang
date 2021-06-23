@@ -51,3 +51,5 @@ Note: Report all issues in the <a href="https://github.com/olijeffers0n/XLang/is
 - This is not an issue however the plugin will download dependencies to the `libraries` folder in your server. This requires one of the latest versions of spigot so you should run [BuildTools](https://www.spigotmc.org/wiki/buildtools/) to get the latest
 
 The plugin is not tested on versions prior to 1.16.5, and it is unlikely to work. 
+
+[Spigot](https://www.spigotmc.org/resources/xlang.93455/) Page
