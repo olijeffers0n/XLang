@@ -180,9 +180,7 @@ public class XLang extends JavaPlugin {
 
     private void loadLanguageCodes() throws IOException, InvalidConfigurationException {
         // Loads all the codes for the languages
-        saveResource("languages.yml", true);
-        YamlConfiguration configuration = new YamlConfiguration();
-        configuration.load(getDataFolder() + File.separator + "languages.yml");
+        YamlConfiguration configuration = YamlConfiguration.loadConfiguration(new InputStreamReader(this.getResource("languages.yml")));
         for (String key : configuration.getConfigurationSection("Map").getKeys(false)) {
             this.languageCodes.put(key, configuration.getString("Map."+key));
         }
