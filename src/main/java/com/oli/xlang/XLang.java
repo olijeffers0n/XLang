@@ -190,7 +190,7 @@ public class XLang extends JavaPlugin {
 
     private void loadHeads() throws IOException, InvalidConfigurationException {
         // Loads all the links for the heads
-        saveResource("heads.yml", true);
+        saveResource("heads.yml", false);
         YamlConfiguration configuration = new YamlConfiguration();
         configuration.load(getDataFolder() + File.separator + "heads.yml");
         for (String key : configuration.getConfigurationSection("Map").getKeys(false)) {
