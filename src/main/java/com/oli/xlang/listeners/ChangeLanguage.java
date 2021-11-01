@@ -18,7 +18,8 @@ public class ChangeLanguage implements Listener {
 
     @EventHandler
     public void onLanguageChange(SelectNewLanguageEvent event) {
-        if (event.getWho().equalsIgnoreCase("player")) { //Player wanted the change to their pdc
+
+        if (event.getWho() == SelectNewLanguageEvent.LanguageChangee.PLAYER) { //Player wanted the change to their pdc
             Player player = Bukkit.getPlayer(event.getUuid());
             player.getPersistentDataContainer().set(this.plugin.key, PersistentDataType.STRING, event.getLanguageCode());
 

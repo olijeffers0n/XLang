@@ -8,11 +8,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import com.oli.xlang.XLang;
 import org.bukkit.persistence.PersistentDataType;
 
-public class Join implements Listener {
+public class PlayerJoinListener implements Listener {
 
 	private final XLang plugin;
 
-	public Join(XLang plugin) {
+	public PlayerJoinListener(XLang plugin) {
 		this.plugin = plugin;
 	}
 

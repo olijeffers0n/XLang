@@ -8,15 +8,16 @@ import com.oli.xlang.commands.XLangCommand;
 import com.oli.xlang.commands.XLangTabCompleter;
 import com.oli.xlang.headapi.HeadApiInterface;
 import com.oli.xlang.listeners.ChangeLanguage;
-import com.oli.xlang.listeners.Chat;
-import com.oli.xlang.listeners.InventoryInteract;
-import com.oli.xlang.listeners.Join;
+import com.oli.xlang.listeners.PlayerChatListener;
+import com.oli.xlang.listeners.InventoryInteractListener;
+import com.oli.xlang.listeners.PlayerJoinListener;
 import com.oli.xlang.translator.Translator;
 import com.oli.xlang.util.InitLangDetector;
 import com.oli.xlang.util.ParameterBuilder;
 import com.oli.xlang.bstats.Metrics;
 
 import com.oli.xlang.versionchecker.VersionChecker;
+import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -41,6 +42,7 @@ public class XLang extends JavaPlugin {
     public Map<String, String> languageCodes;
     public Map<String, String> headCodes;
     public NamespacedKey key;
+    public static IEssentials essentials = null;
 
     @Override
     public void onLoad() {
@@ -70,13 +72,14 @@ public class XLang extends JavaPlugin {
 
         this.key = new NamespacedKey(this, "CustomLocale");
 
+        essentials = (IEssentials) Bukkit.getPluginManager().getPlugin("Essentials");
         this.headApiInterface = new HeadApiInterface(this);
         this.parameterStringBuilder = new ParameterBuilder();
         this.translator = new Translator(this);
 
-        Bukkit.getPluginManager().registerEvents(new Chat(this), this);
-        Bukkit.getPluginManager().registerEvents(new Join(this), this);
-        Bukkit.getPluginManager().registerEvents(new InventoryInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerChatListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryInteractListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ChangeLanguage(this), this);
 
         loadConfig();

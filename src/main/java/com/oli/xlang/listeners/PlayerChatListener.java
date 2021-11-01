@@ -2,6 +2,7 @@ package com.oli.xlang.listeners;
 
 import com.github.pemistahl.lingua.api.Language;
 import com.oli.xlang.XLang;
+import com.oli.xlang.util.EssentialsManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -10,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.persistence.PersistentDataType;
@@ -17,15 +19,15 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public class Chat implements Listener {
+public class PlayerChatListener implements Listener {
 
     private final XLang plugin;
     
-    public Chat(XLang plugin) {
+    public PlayerChatListener(XLang plugin) {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
 
         if (this.plugin.getConfig().getString("deepl.apiKey").equalsIgnoreCase("xxx")) {
@@ -71,20 +73,20 @@ public class Chat implements Listener {
 
                 TextComponent textComponent;
                 if (player.getUniqueId().equals(sender.getUniqueId()))
-                    textComponent = this.textComponentBuilder(message, translation, sender.getDisplayName(), sourceColour, this.plugin.getConfig().getString("language.targetLanguageCode"));
+                    textComponent = this.getTextComponent(message, translation, sender, sourceColour, this.plugin.getConfig().getString("language.targetLanguageCode"));
                 else
-                    textComponent = this.textComponentBuilder(message, translation, sender.getDisplayName(), targetColour, this.plugin.getConfig().getString("language.targetLanguageCode"));
+                    textComponent = this.getTextComponent(message, translation, sender, targetColour, this.plugin.getConfig().getString("language.targetLanguageCode"));
                 player.spigot().sendMessage(textComponent);
             });
 
             extra = " || Translated to: " + translation;
         }
         if (!this.plugin.getConfig().getBoolean("chat.addXLangTranslationComment")) extra = "";
-        System.out.println("<" + event.getPlayer().getDisplayName() + "> " + message + extra);
+        this.plugin.getLogger().info("<" + event.getPlayer().getDisplayName() + "> " + message + extra);
     }
 
-    private TextComponent textComponentBuilder(String original, String translated, String playerName, String colour, String language) {
-        TextComponent textComponent = new TextComponent("<" + playerName + "> " + translated);
+    private TextComponent getTextComponent(String original, String translated, Player sender, String colour, String language) {
+        TextComponent textComponent = new TextComponent(EssentialsManager.getEssentialsMessage(sender, translated));
         textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.BLUE + "The Message Has been translated to " + language  + ", here is the original: \n" + original)));
         textComponent.setColor(ChatColor.of(colour));
 
@@ -103,7 +105,7 @@ public class Chat implements Listener {
         String colour;
         if (player.getUniqueId().equals(sender.getUniqueId())) colour = sourceColour;
         else colour = targetColour;
-        TextComponent textComponent = this.textComponentBuilder(message, translation, sender.getDisplayName(), colour, language);
+        TextComponent textComponent = this.getTextComponent(message, translation, sender, colour, language);
         player.spigot().sendMessage(textComponent);
     }
 

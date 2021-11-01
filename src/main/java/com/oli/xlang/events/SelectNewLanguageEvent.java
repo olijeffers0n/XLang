@@ -9,11 +9,11 @@ import java.util.UUID;
 public class SelectNewLanguageEvent extends Event {
 
     private String languageCode;
-    private String who;
+    private LanguageChangee who;
     private UUID uuid;
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
-    public SelectNewLanguageEvent(String languageCode, String who, UUID uuid) {
+    public SelectNewLanguageEvent(String languageCode, LanguageChangee who, UUID uuid) {
         this.languageCode = languageCode;
         this.who = who;
         this.uuid = uuid;
@@ -33,11 +33,16 @@ public class SelectNewLanguageEvent extends Event {
         return this.languageCode;
     }
 
-    public String getWho() {
+    public LanguageChangee getWho() {
         return this.who;
     }
 
     public UUID getUuid() {
         return this.uuid;
+    }
+
+    public enum LanguageChangee {
+        PLAYER,
+        CONSOLE;
     }
 }

@@ -12,11 +12,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryInteract implements Listener {
+public class InventoryInteractListener implements Listener {
 
     private final XLang plugin;
 
-    public InventoryInteract(XLang plugin) {
+    public InventoryInteractListener(XLang plugin) {
         this.plugin = plugin;
     }
 
@@ -41,9 +41,9 @@ public class InventoryInteract implements Listener {
         }
 
         if (title.equalsIgnoreCase("Choose a Language:"))
-            Bukkit.getPluginManager().callEvent(new SelectNewLanguageEvent(name, "player", event.getWhoClicked().getUniqueId()));
+            Bukkit.getPluginManager().callEvent(new SelectNewLanguageEvent(name, SelectNewLanguageEvent.LanguageChangee.PLAYER, event.getWhoClicked().getUniqueId()));
         else
-            Bukkit.getPluginManager().callEvent(new SelectNewLanguageEvent(name, "console", event.getWhoClicked().getUniqueId()));
+            Bukkit.getPluginManager().callEvent(new SelectNewLanguageEvent(name, SelectNewLanguageEvent.LanguageChangee.CONSOLE, event.getWhoClicked().getUniqueId()));
         player.sendMessage(ChatColor.GREEN + "The Target Language has been set to " + ChatColor.AQUA + name + ChatColor.GREEN + "!");
     	player.closeInventory();
     }
@@ -51,7 +51,6 @@ public class InventoryInteract implements Listener {
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
         String title = event.getView().getTitle();
-        if (!(title.equalsIgnoreCase("Choose a Language:") || title.equalsIgnoreCase("Choose a Server Language:"))) return;
-        event.setCancelled(true);
+        if (title.equalsIgnoreCase("Choose a Language:") || title.equalsIgnoreCase("Choose a Server Language:")) event.setCancelled(true);
     }
 }

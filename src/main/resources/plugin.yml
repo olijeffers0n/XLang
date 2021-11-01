@@ -2,9 +2,11 @@ name: XLang
 author: olijeffers0n
 main: com.oli.xlang.XLang
 api-version: 1.16
-version: 1.1
+version: 1.2
 libraries:
   - com.github.pemistahl:lingua:1.1.0
+softdepend:
+  - Essentials
 commands:
   xlang:
     description: Main command for XLang
