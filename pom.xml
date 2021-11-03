@@ -7,7 +7,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>XLang</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
