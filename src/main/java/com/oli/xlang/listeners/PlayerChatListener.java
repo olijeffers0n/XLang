@@ -55,10 +55,14 @@ public class PlayerChatListener implements Listener {
             extra = " || Translated to " + targetPlayerLanguages.size() + " locale/s";
 
         } else {
-            Language language = this.plugin.detector.detectLanguageOf(message);
-            String sourceLanguage = this.plugin.languageCodes.get(language.name().toLowerCase());
-            if (sourceLanguage != null)
-                if (sourceLanguage.equalsIgnoreCase(this.plugin.getConfig().getString("language.targetLanguageCode"))) return;
+
+            if (this.plugin.getConfig().getBoolean("langdetector.enabled")) {
+                Language language = this.plugin.detector.detectLanguageOf(message);
+                String sourceLanguage = this.plugin.languageCodes.get(language.name().toLowerCase());
+                if (sourceLanguage != null)
+                    if (sourceLanguage.equalsIgnoreCase(this.plugin.getConfig().getString("language.targetLanguageCode")))
+                        return;
+            }
 
             event.setCancelled(true);
 

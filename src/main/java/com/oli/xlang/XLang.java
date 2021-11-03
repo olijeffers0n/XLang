@@ -46,28 +46,33 @@ public class XLang extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        if (Bukkit.getWorlds().size() != 0) {
-            getLogger().severe("You have reloaded the server. This Messes with XLangs language detection. Stopping the server!");
-            Bukkit.shutdown();
+
+        if (getConfig().getBoolean("langdetector.enabled")) {
+            if (Bukkit.getWorlds().size() != 0) {
+                getLogger().severe("You have reloaded the server. This Messes with XLangs language detection. Stopping the server!");
+                Bukkit.shutdown();
+            }
+            getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Starting the Language Service");
+            this.initLangDetector = new InitLangDetector(this);
+            this.initLangDetector.start();
         }
-        getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Starting the Language Service");
-        this.initLangDetector = new InitLangDetector(this);
-        this.initLangDetector.start();
     }
 
     @Override
     public void onEnable() {
 
-        try {
-            Class.forName("com.github.pemistahl.lingua.api.LanguageDetectorBuilder");
-        }catch (ClassNotFoundException ignored) {
-            getLogger().severe("______________________________________________");
-            getLogger().severe("YOU DO NOT HAVE THE LANGUAGE LIBRARY AVAILABLE");
-            getLogger().severe("You are Running: " + Bukkit.getVersion() + ", You must have <= 1.16.5");
-            getLogger().severe("If you are running 1.16.5 you may need to update your build as you do not have the 'libraries' feature");
-            getLogger().severe("______________________________________________");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
+        if (getConfig().getBoolean("langdetector.enabled")) {
+            try {
+                Class.forName("com.github.pemistahl.lingua.api.LanguageDetectorBuilder");
+            } catch (ClassNotFoundException ignored) {
+                getLogger().severe("______________________________________________");
+                getLogger().severe("YOU DO NOT HAVE THE LANGUAGE LIBRARY AVAILABLE");
+                getLogger().severe("You are Running: " + Bukkit.getVersion() + ", You must have <= 1.16.5");
+                getLogger().severe("If you are running 1.16.5 you may need to update your build as you do not have the 'libraries' feature");
+                getLogger().severe("______________________________________________");
+                Bukkit.getPluginManager().disablePlugin(this);
+                return;
+            }
         }
 
         this.key = new NamespacedKey(this, "CustomLocale");
@@ -105,11 +110,13 @@ public class XLang extends JavaPlugin {
             e.printStackTrace();
         }
 
-        try {
-            this.initLangDetector.join();
-        } catch (InterruptedException e) {
-            Bukkit.getPluginManager().disablePlugin(this);
-            e.printStackTrace();
+        if (getConfig().getBoolean("langdetector.enabled")) {
+            try {
+                this.initLangDetector.join();
+            } catch (InterruptedException e) {
+                Bukkit.getPluginManager().disablePlugin(this);
+                e.printStackTrace();
+            }
         }
 
         getCommand("xlang").setExecutor(new XLangCommand(this));
@@ -174,6 +181,8 @@ public class XLang extends JavaPlugin {
         getConfig().addDefault("chat.translateJoinMessage", false);
         // The delay before sending the join message.
         getConfig().addDefault("chat.joinMessageDelay", 60);
+        // Whether to use the language detector
+        getConfig().addDefault("langdetector.enabled", true);
 
         getConfig().options().copyDefaults(true);
 
