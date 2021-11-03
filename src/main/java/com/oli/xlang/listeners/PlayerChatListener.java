@@ -91,7 +91,9 @@ public class PlayerChatListener implements Listener {
 
     private TextComponent getTextComponent(String original, String translated, Player sender, String colour, String language) {
         TextComponent textComponent = new TextComponent(EssentialsManager.getEssentialsMessage(sender, translated));
-        textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.BLUE + "The Message Has been translated to " + language  + ", here is the original: \n" + original)));
+        if (this.plugin.getConfig().getBoolean("chat.hoverMessage")) {
+            textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.BLUE + "The Message Has been translated to " + language + ", here is the original: \n" + original)));
+        }
         textComponent.setColor(ChatColor.of(colour));
 
         return textComponent;

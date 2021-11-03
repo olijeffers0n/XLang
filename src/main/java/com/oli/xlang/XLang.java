@@ -181,8 +181,10 @@ public class XLang extends JavaPlugin {
         getConfig().addDefault("chat.translateJoinMessage", false);
         // The delay before sending the join message.
         getConfig().addDefault("chat.joinMessageDelay", 60);
+        // Whether to add the hover message
+        getConfig().addDefault("chat.hoverMessage", true);
         // Whether to use the language detector
-        getConfig().addDefault("langdetector.enabled", true);
+        getConfig().addDefault("langDetector.enabled", true);
 
         getConfig().options().copyDefaults(true);
 
